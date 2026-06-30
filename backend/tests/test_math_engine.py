@@ -106,14 +106,15 @@ def test_realized_volatility_nonnegative():
     assert me.realized_volatility(closes) >= 0
 
 
-def test_agentic_loop_runs_end_to_end():
+@pytest.mark.asyncio
+async def test_agentic_loop_runs_end_to_end():
     from backend.agents.agents import AgenticLoop, MarketSnapshot
 
     closes, highs, lows, vols = _fake_series(n=80)
     snap = MarketSnapshot(symbol="TEST", closes=closes, highs=highs, lows=lows,
                            volumes=vols, price=float(closes[-1]))
     loop = AgenticLoop()
-    result = loop.run_cycle(snap)
+    result = await loop.run_cycle(snap)
     assert result.final_decision in {"BUY", "SELL", "HOLD"}
     assert len(result.messages) == 6  # Trader, Analyst, Risk, Supervisor, Content, Explain
     assert result.explain
