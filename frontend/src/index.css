@@ -1,0 +1,89 @@
+:root {
+  --void:        #000000;
+  --surface:     #0D1117;
+  --surface-2:   #131920;
+  --surface-3:   #1A212A;
+  --hairline:    #1F262E;
+  --text-bright: #D4D8DE;
+  --text-muted:  #8B929A;
+  --text-faint:  #5C636A;
+
+  --signal-buy:    #0ECB81;
+  --signal-sell:   #F23645;
+  --signal-hold:   #F0B90B;
+  --signal-info:   #5D9DF9;
+
+  --buy-dim:  rgba(14, 203, 129, 0.10);
+  --sell-dim: rgba(242, 54, 69, 0.10);
+  --hold-dim: rgba(240, 185, 11, 0.10);
+
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+  --radius: 2px;
+  --rail-width: 200px;
+}
+
+* { box-sizing: border-box; }
+html, body, #root { height: 100%; }
+body {
+  margin: 0;
+  background: var(--void);
+  color: var(--text-bright);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+code, .mono, .num { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+::selection { background: rgba(93, 157, 249, 0.30); color: var(--text-bright); }
+
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: var(--void); }
+::-webkit-scrollbar-thumb { background: var(--hairline); border-radius: 0; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-faint); }
+
+a { color: var(--signal-info); }
+button { font-family: var(--font-mono); cursor: pointer; }
+:focus-visible { outline: 1px solid var(--signal-info); outline-offset: 1px; }
+
+input, select, textarea {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  background: var(--surface);
+  color: var(--text-bright);
+  border: 1px solid var(--hairline);
+  border-radius: 0;
+  padding: 4px 6px;
+}
+input:focus, select:focus, textarea:focus {
+  border-color: var(--signal-info);
+  outline: none;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  font-family: var(--font-mono);
+  font-size: 11px;
+}
+th {
+  text-align: left;
+  color: var(--text-faint);
+  font-weight: 500;
+  padding: 4px 8px;
+  border-bottom: 1px solid var(--hairline);
+  letter-spacing: 0.05em;
+}
+td {
+  padding: 4px 8px;
+  border-bottom: 1px solid var(--hairline);
+  color: var(--text-muted);
+}
+tr:hover td {
+  background: var(--surface-2);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition: none !important; }
+}

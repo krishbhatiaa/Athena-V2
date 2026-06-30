@@ -1,0 +1,25 @@
+# --- Web framework ---------------------------------------------------
+fastapi==0.115.6
+uvicorn[standard]==0.32.1
+websockets==13.1
+python-multipart==0.0.17
+
+# --- State / async ------------------------------------------------------
+redis==5.2.1
+httpx==0.28.1
+
+# --- Quant / data ---------------------------------------------------
+numpy==1.26.4
+scipy==1.13.1
+pandas==2.2.3
+yfinance==0.2.50
+
+# --- Validation -------------------------------------------------------
+pydantic==2.10.4
+
+# --- Observability (optional, degrades gracefully if missing) --------
+prometheus-fastapi-instrumentator==7.0.0
+
+# --- Testing ----------------------------------------------------------
+pytest==8.3.4
+pytest-asyncio==0.25.1

@@ -1,0 +1,31 @@
+services:
+  # Backend API — free tier (512 MB RAM, auto-sleep after 15min inactivity)
+  - type: web
+    name: athena-backend
+    runtime: python
+    buildCommand: pip install -r backend/requirements.txt
+    startCommand: uvicorn backend.main:app --host 0.0.0.0 --port $PORT --workers 1
+    plan: free
+    envVars:
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: athena-redis
+          property: connectionString
+      - key: CORS_ORIGINS
+        value: https://athena-dashboard.vercel.app
+      # Ollama is optional — ContentAgent falls back to templates if unreachable.
+      - key: OLLAMA_ENABLED
+        value: "false"
+      - key: OLLAMA_BASE_URL
+        value: http://localhost:11434
+      - key: OLLAMA_MODEL
+        value: llama3.2:3b
+      - key: OLLAMA_TIMEOUT
+        value: "30"
+
+  # Redis — free 25MB instance
+  - type: redis
+    name: athena-redis
+    plan: free
+    maxmemoryPolicy: allkeys-lru
