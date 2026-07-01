@@ -14,6 +14,6 @@ COPY backend ./backend
 EXPOSE 8000
 
 HEALTHCHECK --interval=15s --timeout=3s --start-period=10s --retries=3 \
-    CMD python -c "import urllib.request,sys; sys.exit(0) if urllib.request.urlopen('http://localhost:8000/health').status==200 else sys.exit(1)"
+    CMD python -c "import urllib.request,sys,os; port=os.getenv('PORT','8000'); sys.exit(0) if urllib.request.urlopen(f'http://localhost:{port}/health').status==200 else sys.exit(1)"
 
-CMD ["uvicorn", "backend.main:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "1"]
+CMD sh -c "uvicorn backend.main:app --host 0.0.0.0 --port ${PORT:-8000} --workers 1"
