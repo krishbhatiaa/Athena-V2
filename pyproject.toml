@@ -1,0 +1,12 @@
+[tool.poetry]
+name = "athena-backend"
+version = "2.0.0"
+description = "ATHENA - Autonomous Financial Cognition Platform"
+authors = []
+
+[tool.poetry.dependencies]
+python = ">=3.12,<3.13"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
