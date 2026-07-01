@@ -1,8 +1,14 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 
 export const API_BASE = process.env.REACT_APP_API_BASE || 'http://localhost:8000';
-const WS_PROTO = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-export const WS_BASE = `${WS_PROTO}//${window.location.host}`;
+const getWsBase = () => {
+  if (API_BASE.startsWith('http://') || API_BASE.startsWith('https://')) {
+    return API_BASE.replace(/^http/, 'ws');
+  }
+  const WS_PROTO = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+  return `${WS_PROTO}//${window.location.host}${API_BASE}`;
+};
+export const WS_BASE = getWsBase();
 
 async function request(path, options = {}) {
   const res = await fetch(`${API_BASE}${path}`, {
