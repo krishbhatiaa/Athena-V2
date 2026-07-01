@@ -29,4 +29,6 @@ services:
     name: athena-redis
     plan: free
     maxmemoryPolicy: allkeys-lru
-    ipAllowList: 0.0.0.0/0
+    ipAllowList:
+      - source: 0.0.0.0/0
+        description: allow all connections (internal Render network only)
