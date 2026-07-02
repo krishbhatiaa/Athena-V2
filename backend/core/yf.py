@@ -94,16 +94,28 @@ def _invalidate_crumb():
         _crumb_ts = 0
 
 
-def _request(url: str, params: dict | None = None, retries: int = 2) -> requests.Response:
+def _is_html(content: bytes) -> bool:
+    return content[:16].strip().lower().startswith(b"<!doctype") or content[:8].strip().lower().startswith(b"<html")
+
+
+def _request(url: str, params: dict | None = None, retries: int = 3) -> requests.Response:
     s = _session()
     headers = {"Referer": "https://finance.yahoo.com/"}
     for attempt in range(retries + 1):
         r = s.get(url, params=params, headers=headers, timeout=30)
-        if r.status_code != 429:
-            return r
-        logger.warning("Yahoo rate-limited (429), retry %d/%d", attempt + 1, retries)
-        time.sleep(2 ** attempt * 5)
-    return s.get(url, params=params, headers=headers, timeout=30)
+        if r.status_code == 429:
+            logger.warning("Yahoo rate-limited (429), retry %d/%d", attempt + 1, retries)
+            time.sleep(2 ** attempt * 5)
+            continue
+        if r.status_code >= 500:
+            logger.warning("Yahoo server error %d, retry %d/%d", r.status_code, attempt + 1, retries)
+            time.sleep(2 ** attempt * 3)
+            continue
+        return r
+    msg = f"Yahoo API still failing after {retries + 1} attempts (last status {r.status_code}) for {url[:80]}"
+    if _is_html(r.content):
+        msg += " — response was HTML, possible blocking or gateway error"
+    raise ValueError(msg)
 
 
 _PERIOD_MAP = {
@@ -215,6 +227,11 @@ def fetch_fundamentals(symbol: str) -> dict:
             timeout=30,
         )
     if r.status_code != 200:
+        if _is_html(r.content):
+            raise ValueError(
+                f"Yahoo quoteSummary returned HTML (status {r.status_code}) for {symbol} — "
+                f"possible blocking or gateway error"
+            )
         raise ValueError(f"Yahoo quoteSummary returned {r.status_code} for {symbol}: {r.text[:200]}")
     data = r.json()
     qs = data["quoteSummary"]["result"][0]
