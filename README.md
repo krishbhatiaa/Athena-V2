@@ -5,6 +5,10 @@
 > **Paper trading only. No real money is ever at risk.**
 
 ATHENA is a free, open-source quantitative trading dashboard that runs a 5-agent reasoning loop against live market data (via yfinance, no API key required) while also stress-testing the strategy at high synthetic throughput via a vectorized simulation engine.
+DEMO:
+
+Uploading athenav2DEMO (1) (1) (1).mp4…
+
 
 ---
 
